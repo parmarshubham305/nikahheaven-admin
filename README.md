@@ -1,0 +1,1 @@
+This project is created using npx create-react-app with nodejs v20.9.0 and npm v10.1.0
