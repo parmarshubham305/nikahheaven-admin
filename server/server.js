@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const { initializeApp } = require("firebase/app");
 const admin = require("firebase-admin");
 const serviceAccount = require("./serviceAccountKey.json");
+
 // const { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, onSnapshot, serverTimestamp } = require("firebase/firestore");
 
 const app = express();
@@ -26,7 +27,6 @@ app.get("/", (req, res) => {
 
 //firebase
 
-
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: "https://nikahhevan-default-rtdb.firebaseio.com",
@@ -41,7 +41,40 @@ const dbCollections = {
     Notifications: "Notifications",
 };
 
-app.post("/schedule-meeting", async (req, res) => {
+const appCheckVerification = async (req, res, next) => {
+    let appCheckToken = req.header("Authorization");
+    appCheckToken = appCheckToken?.replace("Bearer ", "");
+
+    if (!appCheckToken) {
+        res.status(401);
+        return next("Unauthorized");
+    }
+    let userData = null;
+
+    try {
+        const appCheckClaims = await admin.auth().verifyIdToken(appCheckToken);
+        const usersRef = db.collection(dbCollections.Users).where("uid", "==", appCheckClaims?.uid);
+        const userSnapshot = await usersRef.get();
+
+        userSnapshot.forEach((userDoc) => {
+            userData = userDoc.data();
+        });
+
+        if (appCheckClaims && userData?.role === 'superadmin') {
+            return next();
+        } else {
+            // User is not an admin
+            res.status(403);
+            return next("Forbidden");
+        }
+    } catch (err) {
+        console.error("Error verifying App Check token:", err);
+        res.status(401);
+        return next("Unauthorized");
+    }
+};
+
+app.post("/schedule-meeting", [appCheckVerification], async (req, res) => {
     try {
         const payload = req.body;
 
@@ -94,7 +127,7 @@ async function storeNotification(userId, notification, host_user_id) {
             createdAt: createdAt,
             uuid: uuid,
             notification: notification,
-            host_user_id:host_user_id,
+            host_user_id: host_user_id,
             notificationType: "scheduleMeeting",
         };
 
@@ -112,7 +145,7 @@ async function sendNotifications(tokens, notification, host_user_id) {
         const messages = tokens?.map((item) => ({
             data: {
                 userId: item?.userId,
-                host_user_id:host_user_id || '',
+                host_user_id: host_user_id || "",
             },
             notification: notification,
             token: item?.fcmToken,

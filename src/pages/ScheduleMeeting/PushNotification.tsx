@@ -83,7 +83,7 @@ const PushNotification = ({ user = null }: any) => {
         //     error?.error && toaster(toastTypes.ERROR, error?.error);
         //     setIsLoading(false);
         //   });
-        const res = await axiosPost(`${config?.backendUrl}/schedule-meeting`, values);
+        const res = await axiosPost(`${config?.backendUrl}/schedule-meeting`, values, user?.authUser?.accessToken);
 
         if (res?.status) {
           // props.getAllMeetings();
