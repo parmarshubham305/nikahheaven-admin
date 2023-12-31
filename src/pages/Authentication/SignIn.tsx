@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../../images/logo/splash_logo.svg';
-import LogoPNG from '../../images/logo/splash_logo.png';
+// import LogoPNG from '../../images/logo/splash_logo.png';
 import loginPageMobileImage from '../../images/assets/svgs/login-mobile.svg';
 import { FieldValues, useForm } from 'react-hook-form';
 import { auth } from '../../firebase/config';
@@ -10,7 +10,7 @@ import { ErrorMessage } from '@hookform/error-message';
 import Loader, { Spinner } from '../../common/Loader';
 import { DASHBOARD } from '../../routes/constants';
 import useAuth from '@/hooks/use-auth';
-import { getFCMTokenAndStore } from '@/firebase/services/user';
+// import { getFCMTokenAndStore } from '@/firebase/services/user';
 
 const SignIn = () => {
   const {
@@ -40,7 +40,7 @@ const SignIn = () => {
           //   const token = encodeLocalData(userCredential?.user);
           //   localStorage.setItem(localKeys.AUTH, token);
           if (userCredential?.user) {
-            getFCMTokenAndStore(userCredential?.user?.uid);
+            // getFCMTokenAndStore(userCredential?.user?.uid);
 
             navigate(DASHBOARD);
           }
