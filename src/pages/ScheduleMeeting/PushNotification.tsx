@@ -111,15 +111,15 @@ const PushNotification = ({ user = null }: any) => {
   };
 
   const handleSaveNotification = async () => {
-    delete user.authUser
+    const {authUser, ...rest}=user;
     const payLoad = {
-      ...user,
+      ...rest,
       notification: {
         title: title || '',
         description: desc || '',
       },
     };
-    const res = (await setDocData(payLoad, C_USERS, user?.uid)) as any;
+    const res = (await setDocData(payLoad, C_USERS, rest?.uid)) as any;
     if (res?.uid) {
       setIsNotificationEdit(false);
       toaster(toastTypes.SUCCESS, 'Notification Save Successfully');
@@ -159,7 +159,7 @@ const PushNotification = ({ user = null }: any) => {
         <div className="border-stroke bg-white text-black dark:text-white dark:border-strokedark dark:bg-boxdark rounded-lg overflow-hidden shadow-lg w-full">
           <div className="flex justify-between p-4 bg-gray-200">
             <h5 className="text-xl">Notification</h5>
-            <button type='button' className="bg-primary text-white px-4 py-2 rounded" onClick={() => setIsNotificationEdit(!isNotificationEdit)}>
+            <button type="button" className="bg-primary text-white px-4 py-2 rounded" onClick={() => setIsNotificationEdit(!isNotificationEdit)}>
               Edit
             </button>
           </div>
