@@ -22,15 +22,24 @@ const PushNotification = ({ user = null }: any) => {
     getValues,
     watch,
   } = useForm({
-    values: {
-      host_user_id: user?.uid,
-      meeting_dateAndTime: '',
-      meeting_country: Countries[0]?.value || '',
-      notification_title: user?.notification?.title || 'Meeting Scheduled',
-      notification_description:
-        user?.notification?.description ||
-        `You have a meeting scheduled for ${new Date()}. The meeting will take place in ${Countries[0]?.label}. Please be prepared and join on time.`,
+    defaultValues:{
+        host_user_id: user?.uid,
+        meeting_dateAndTime: '',
+        meeting_country: Countries[0]?.value || '',
+        notification_title: user?.notification?.title || 'Meeting Scheduled',
+        notification_description:
+          user?.notification?.description ||
+          `You have a meeting scheduled for ${new Date()}. The meeting will take place in ${Countries[0]?.label}. Please be prepared and join on time.`,
     },
+    // values: {
+    //   host_user_id: user?.uid,
+    //   meeting_dateAndTime: '',
+    //   meeting_country: Countries[0]?.value || '',
+    //   notification_title: user?.notification?.title || 'Meeting Scheduled',
+    //   notification_description:
+    //     user?.notification?.description ||
+    //     `You have a meeting scheduled for ${new Date()}. The meeting will take place in ${Countries[0]?.label}. Please be prepared and join on time.`,
+    // },
   });
 
   //   const values = getValues();
