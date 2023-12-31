@@ -8,7 +8,7 @@ import { auth } from '../firebase/config';
 // import { getUserData } from '../firebase/services/auth';
 import { localKeys, secretKeys } from '../constants/localStorage';
 import { handleTokenExpired } from '../utils/refreshToken';
-import { getProfileLogInData } from '../firebase/services/user';
+import { getFCMTokenAndStore, getProfileLogInData } from '../firebase/services/user';
 import { apiHandler, axiosPost } from '../firebase/axios';
 // import { logInProviders } from '../constants/staticData';
 // import useProfileStore from '../stores/ProfileStore';
@@ -40,6 +40,9 @@ const useAuth = (isInitialCall = true) => {
   const fetchData = async (email: string | null, authUser: any) => {
     const res = (await getUserData(email)) as any;
     if (res) {
+      if (!res?.fcmToken) {
+        getFCMTokenAndStore(res?.uid);
+      }
       const { uid, id, rt } = res;
       const loginRes = (await getProfileLogInData(uid)) as any;
       if (loginRes) {
@@ -102,8 +105,7 @@ const useAuth = (isInitialCall = true) => {
         // });
         tokenExpireHandler(expiry_date, refresh_token);
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const getUser = () => {

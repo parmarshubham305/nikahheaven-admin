@@ -1,10 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import { Outlet } from 'react-router-dom';
 
 const DefaultLayout = ({ user }:any) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(()=>{
+    Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          console.log("Notification permission granted");
+        } else {
+          console.log('Notification permission denied');
+          return;
+        }
+      });
+  },[])
 
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark">

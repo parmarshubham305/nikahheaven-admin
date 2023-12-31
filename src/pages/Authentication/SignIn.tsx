@@ -10,6 +10,7 @@ import { ErrorMessage } from '@hookform/error-message';
 import Loader, { Spinner } from '../../common/Loader';
 import { DASHBOARD } from '../../routes/constants';
 import useAuth from '@/hooks/use-auth';
+import { getFCMTokenAndStore } from '@/firebase/services/user';
 
 const SignIn = () => {
   const {
@@ -39,6 +40,8 @@ const SignIn = () => {
           //   const token = encodeLocalData(userCredential?.user);
           //   localStorage.setItem(localKeys.AUTH, token);
           if (userCredential?.user) {
+            getFCMTokenAndStore(userCredential?.user?.uid);
+
             navigate(DASHBOARD);
           }
           setIsLoading(false);
