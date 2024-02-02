@@ -13,7 +13,7 @@ const app = express();
 const port = 5000; // Set the desired port number
 
 // Middleware
-app.use(cors());
+app.use(cors({origin: ['http://localhost:5000', 'http://localhost:5173', 'https://admin.nikahheaven.com']}));
 app.use(bodyParser.json());
 
 // Start the server
